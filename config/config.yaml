@@ -1,6 +1,7 @@
+Roboflow: 1 #If you have a dataset from roboflow, put this to 0
 dataset:
   workspace_name: huyifei
-  project_name: tft-id
+  project_name: tft-id #If you dont have a roboflow dataset, change this to the folder name where the dataset is located in ./data
   project_version: 1
   model: yolov11
 

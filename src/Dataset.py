@@ -11,6 +11,7 @@ class Dataset(Roboflow, ConfigYAML, ConfigPaths):
         ConfigYAML.__init__(self)
         ConfigPaths.__init__(self)
 
+        self.roboflow = self.config_data["Roboflow"]
         self.workspace_name = self.config_data["dataset"]["workspace_name"]
         self.project_name = self.config_data["dataset"]["project_name"]
         self.project_version = self.config_data["dataset"]["project_version"]
@@ -18,10 +19,11 @@ class Dataset(Roboflow, ConfigYAML, ConfigPaths):
 
 
     def load_data(self, download_location: str):
-        api_key = load_env()
-        project = Roboflow(api_key=api_key).workspace(self.workspace_name).project(self.project_name)
-        project.version(self.project_version).download(self.model, location=download_location, overwrite=False)
-        self.__redefine_paths(dataset_yaml_path=f"{download_location}/data.yaml") 
+        if self.roboflow == 0:
+            api_key = load_env()
+            project = Roboflow(api_key=api_key).workspace(self.workspace_name).project(self.project_name)
+            project.version(self.project_version).download(self.model, location=download_location, overwrite=False)
+            self.__redefine_paths(dataset_yaml_path=f"{download_location}/data.yaml") 
     
  
     #-----------Private Methods-----------#
