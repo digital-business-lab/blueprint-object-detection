@@ -1,0 +1,8 @@
+train: C:\Git_Repos\blueprint-object-detection/data/tft-id/train/images
+val: C:\Git_Repos\blueprint-object-detection/data/tft-id/valid/images
+test: C:\Git_Repos\blueprint-object-detection/data/tft-id/test/images
+nc: 3
+names:
+- figure
+- table
+- text
