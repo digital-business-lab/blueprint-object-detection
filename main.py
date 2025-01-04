@@ -1,31 +1,75 @@
+""" 
+This script is the main module and starts the whole pipeline
+    - Loading dataset
+    - Loading configs
+    - Starting training / prediction
+    - Logging data
+
+File is written in pylint standard
+"""
+
 from src.Dataset import Dataset
 from src.Model import Model
-from src.Config import *
+from src.Config import ConfigPaths, ConfigYAML
 
 
-def load_dataset():
+def load_dataset() -> None:
+    """
+    Loads dataset
+
+    Returns:
+    -------
+        None
+    """
     Dataset().load_data(f"{ConfigPaths().folder_data()}/{Dataset().project_name}")
 
-def model_mode_output(model: Model, file_paths: list, confidence: float =0.1, mode: str ="predict"):
-    """Trains, Predicts or Trains + Predicts given on the input"""
+def model_mode_output(model: Model, confidence: float, mode: str):
+    """
+    Loads the model mode "train", "predict" or "train_predict" and executes
+    accordingly
+
+    Parameters:
+    -----------
+        model: Model
+            -> Model which should be used
+        confidence: float
+            -> Confidence with which the model should predict
+        mode: str
+            -> Specific mode
+
+    Returns:
+    -------
+        None
+    """
+    results = None
 
     if mode == "train":
-        model.train()
+        results = model.train()
 
     elif mode == "predict":
-        return model.predict(file_paths=file_paths, confidence=confidence)
-    
+        results = model.prediction(confidence=confidence)
+
     elif mode == "train_predict":
         model.train()
-        return model.predict(file_paths=file_paths, confidence=confidence)
-    
+        results = model.prediction(confidence=confidence)
+
     else:
-        raise ValueError(f"Input for mode has to be 'train', 'predict' or 'train_predict'! Your input was: '{mode}'")
-    
-def get_model_mode():
-    data = ConfigYAML().config_data
-    return data["modelMode"], data["modelConfidence"]
-    
+        results = ValueError(
+            f"Wrong input! Select 'train', 'predict' or 'train_predict'! Your input was: '{mode}'"
+            )
+
+    return results
+
+def get_model_mode() -> str:
+    """
+    Loads mode from config
+
+    Returns:
+    -------
+        str
+    """
+    data: dict = ConfigYAML().config_data
+    return data["model"]["modelMode"], data["model"]["modelConfidence"]
 
 
 if __name__ == "__main__":
@@ -34,7 +78,6 @@ if __name__ == "__main__":
     MODEL = Model()
     MODE, CONFIDENCE = get_model_mode()
 
-    model_mode_output(model=MODEL,
-                      file_paths=["test123.jpg", "345test.jpg"],
-                      confidence=CONFIDENCE,
-                      mode=MODE)
+    results_model = model_mode_output(model=MODEL,
+                        confidence=CONFIDENCE,
+                        mode=MODE)

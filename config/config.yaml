@@ -1,16 +1,22 @@
-Roboflow: 1 #If you have a dataset from roboflow, put this to 0
+Roboflow: 1 #If dataset from Roboflow -> 0 else 1
+
 dataset:
   workspace_name: huyifei
-  project_name: tft-id #If you dont have a roboflow dataset, change this to the folder name where the dataset is located in ./data
+  project_name: dog-cat
   project_version: 1
   model: yolov11
 
-modelName: yolo11n.pt
+datasetCustom:
+  PredictionPath: C:/Git_Repos/blueprint-object-detection/data/dog-cat/test/images #Folder with images for prediction
+  PredictionSavePath: C:/Git_Repos/blueprint-object-detection/result #Path where predictions should be saved
+  ImageType: jpg #Type of images in the folder
 
-modelMode: train #train, predict, train_predict
-modelConfidence: 0.1 #Used for predict and train_predict
+model:
+  modelName: yolo11n.pt
+  modelMode: train #train, predict, train_predict
+  modelConfidence: 0.4 #Used for predict and train_predict
 
-modelSpecific:
+modelParams:
   epochs: 1
   imgsz: 640
   patience: 100
@@ -21,4 +27,5 @@ modelSpecific:
   momentum: 0.937
   weight_decay: 0.0005
   dropout: 0.0
-  project: C:\Git_Repos\blueprint-object-detection\runs #Directory where metrics, weights, etc. are saved
+  plots: True
+  project: C:/Git_Repos/blueprint-object-detection/runs #Directory where metrics, weights, etc. are saved

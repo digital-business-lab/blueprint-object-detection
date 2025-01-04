@@ -170,3 +170,6 @@ runs
 
 # Model
 *.pt
+*.jpg
+mlruns/*
+!mlruns/.gitkeep
