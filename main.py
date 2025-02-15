@@ -8,9 +8,18 @@ This script is the main module and starts the whole pipeline
 File is written in pylint standard
 """
 
+import logging
+
 from src.Dataset import Dataset
 from src.Model import Model
 from src.Config import ConfigPaths, ConfigYAML
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    filename="logs.log",
+    format='%(levelname)s : %(name)s : %(asctime)s -> %(message)s <- %(filename)s : %(funcName)s',
+    level=logging.INFO
+)
 
 
 def load_dataset() -> None:
@@ -41,6 +50,7 @@ def model_mode_output(model: Model, confidence: float, mode: str):
     -------
         None
     """
+    logger.info("Selected mode for model :'%s'", mode)
     results = None
 
     if mode == "train":
@@ -57,6 +67,7 @@ def model_mode_output(model: Model, confidence: float, mode: str):
         results = ValueError(
             f"Wrong input! Select 'train', 'predict' or 'train_predict'! Your input was: '{mode}'"
             )
+        logger.critical(results)
 
     return results
 

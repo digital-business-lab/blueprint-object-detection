@@ -5,6 +5,7 @@ File is written in pylint standard
 """
 
 import os
+import logging
 
 from roboflow import Roboflow
 
@@ -35,6 +36,9 @@ class Dataset(Roboflow, ConfigYAML, ConfigPaths):
         self.project_version = self.config_data["dataset"]["project_version"]
         self.model = self.config_data["dataset"]["model"]
 
+        self.logger = logging.getLogger(__name__)
+        self.logger.info("Initialized Class 'Dataset'.")
+
 
     def load_data(self, download_location: str) -> None:
         """
@@ -56,6 +60,7 @@ class Dataset(Roboflow, ConfigYAML, ConfigPaths):
                 self.model, location=download_location, overwrite=False
                 )
             self.__redefine_paths(dataset_yaml_path=f"{download_location}/data.yaml")
+        self.logger.info("Loaded dataset from %s", download_location)
 
 
     #-----------Private Methods-----------#

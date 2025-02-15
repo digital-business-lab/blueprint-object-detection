@@ -6,6 +6,7 @@ File is written in pylint standard
 """
 
 import glob
+import logging
 
 import mlflow
 from ultralytics import YOLO
@@ -32,6 +33,9 @@ class Model(ConfigYAML, ConfigPaths):
         mlflow.set_tracking_uri(f"file:{self.folder_mlruns()}")
         mlflow.set_experiment(self.config_data["dataset"]["project_name"])
 
+        self.logger = logging.getLogger(__name__)
+        self.logger.info("Initialized class 'Model'.")
+
     def train(self) -> None:
         """
         Trains the model
@@ -44,6 +48,7 @@ class Model(ConfigYAML, ConfigPaths):
         -------
             None
         """
+        self.logger.info("Started training.")
         with mlflow.start_run():
             epochs = self.config_data["modelParams"]["epochs"]
             imgsz = self.config_data["modelParams"]["imgsz"]
@@ -94,6 +99,7 @@ class Model(ConfigYAML, ConfigPaths):
 
             mlflow.end_run()
 
+        self.logger.info("Finished training.")
         return results
 
     def prediction(self, confidence: float) -> list:
@@ -109,6 +115,7 @@ class Model(ConfigYAML, ConfigPaths):
         -------
             list
         """
+        self.logger.info("Starting prediction with confidence: %d", confidence)
         save_path: str = self.config_data["datasetCustom"]["PredictionSavePath"]
         file_paths: str = self.config_data["datasetCustom"]["PredictionPath"]
         files = glob.glob(f"{file_paths}/*.{self.config_data['datasetCustom']['ImageType']}")
